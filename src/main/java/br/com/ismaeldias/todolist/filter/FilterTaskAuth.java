@@ -29,6 +29,12 @@ public class FilterTaskAuth extends OncePerRequestFilter{
 
       var serletPath = request.getServletPath();
 
+      // Permite OPTIONS (preflight CORS) passar sem autenticação
+      if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        filterChain.doFilter(request, response);
+        return;
+      }
+
       if (serletPath.startsWith("/tasks/")) {
 
         var authorization = request.getHeader("Authorization");
