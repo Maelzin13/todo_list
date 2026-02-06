@@ -19,20 +19,30 @@ public class UserController {
   @Autowired
   private IUserRepository userRepository;
  
+  /**
+   * Cadastro de usuário. JSON deve conter: name, email, password.
+   * Login (Basic Auth) usa sempre email + senha.
+   */
   @PostMapping("/")
-  public ResponseEntity create(@RequestBody UserModel userModel) {
-    var user = this.userRepository.findByEmail(userModel.getEmail());
+  public ResponseEntity<?> create(@RequestBody UserModel userModel) {
+    String email = userModel.getEmail() != null ? userModel.getEmail().trim() : null;
+    if (email == null || email.isBlank()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo email é obrigatório.");
+    }
+    userModel.setEmail(email);
 
-    if(user != null){
-      System.out.println("Ususario já existe");
-      
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ususario já existe");
+    var user = this.userRepository.findByEmail(email);
+    if (user != null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe com este email.");
     }
 
-    var passwordHashred = BCrypt.withDefaults()
-      .hashToString(12, userModel.getPassword().toCharArray());
+    if (userModel.getPassword() == null || userModel.getPassword().isBlank()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo senha é obrigatório.");
+    }
 
-    userModel.setPassword(passwordHashred);
+    var passwordHashed = BCrypt.withDefaults()
+        .hashToString(12, userModel.getPassword().toCharArray());
+    userModel.setPassword(passwordHashed);
     userModel.setDataCadastro(LocalDate.now());
 
     var userCreated = this.userRepository.save(userModel);

@@ -12,7 +12,8 @@ import lombok.Data;
 
 /**
  * Mapeamento da tabela existente financas.usuario (banco já existente).
- * Login por email (Basic Auth envia email:senha).
+ * Cadastro e login usam sempre o campo email (coluna email na tabela).
+ * Basic Auth: primeiro campo = email, segundo = senha (Authorization: Basic base64(email:senha)).
  */
 @Data
 @Entity
@@ -34,13 +35,4 @@ public class UserModel {
 
   @Column(name = "data_cadastro")
   private LocalDate dataCadastro;
-
-  /** API e Basic Auth usam "username"; na tabela financas.usuario o campo é email. */
-  public String getUsername() {
-    return email;
-  }
-
-  public void setUsername(String username) {
-    this.email = username;
-  }
 }

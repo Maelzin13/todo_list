@@ -44,27 +44,28 @@ public class FilterTaskAuth extends OncePerRequestFilter{
         }
 
         var authEncoded = authorization.substring("Basic ".length()).trim();
-  
         byte[] authDecoded = Base64.getDecoder().decode(authEncoded);
-  
-        var atuthString = new String(authDecoded);
-  
-        
-        String[] credentials = atuthString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
+        var authString = new String(authDecoded);
+        // Basic Auth: primeira parte = email, segunda = senha (split no primeiro ":" para senhas com ":")
+        int colon = authString.indexOf(':');
+        if (colon < 0) {
+          response.sendError(401);
+          return;
+        }
+        String email = authString.substring(0, colon).trim();
+        String password = authString.substring(colon + 1);
 
         var user = this.userRepository.findByEmail(email);
-        if(user == null){
+        if (user == null) {
           response.sendError(401);
-        }else {
-          var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
-          if(passwordVerify.verified){
-            request.setAttribute("idUser", user.getId());
-            filterChain.doFilter(request, response);
-          }else {
-             response.sendError(401);
-          }
+          return;
+        }
+        var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+        if (passwordVerify.verified) {
+          request.setAttribute("idUser", user.getId());
+          filterChain.doFilter(request, response);
+        } else {
+          response.sendError(401);
         }
       } else { 
         filterChain.doFilter(request, response);
