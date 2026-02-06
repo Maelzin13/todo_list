@@ -8,7 +8,8 @@ COPY . .
 RUN apt-get install maven -y
 RUN mvn clean install
 
-FROM openjdk:17-jdk-slim
+# Imagem oficial Eclipse Temurin (openjdk foi descontinuada no Docker Hub)
+FROM eclipse-temurin:17-jre
 
 EXPOSE 8080
 
