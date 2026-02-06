@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+.cursor/
+
+### Local config (credenciais de banco) ###
+application-local.properties
+jarvis_docs/

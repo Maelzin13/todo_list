@@ -2,7 +2,6 @@ package br.com.ismaeldias.todolist.task;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +25,9 @@ public class TaskController {
   private ITaskRepository taskRepository;
 
   @PostMapping("/")
-  public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request){
-    System.out.println("Chegou no controller");
+  public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request) {
     var idUser = request.getAttribute("idUser");
-    taskModel.setIdUser((UUID) idUser);
+    taskModel.setIdUser((Long) idUser);
 
     var currentData = LocalDateTime.now();
     if(currentData.isAfter(taskModel.getStartAt()) || currentData.isAfter(taskModel.getEndAt())){
@@ -47,15 +45,13 @@ public class TaskController {
   }
 
   @GetMapping("/")
-  public List<TaskModel> lista(HttpServletRequest request){
+  public List<TaskModel> lista(HttpServletRequest request) {
     var idUser = request.getAttribute("idUser");
-    var tasks = this.taskRepository.findByIdUser((UUID) idUser);
-    
-    return tasks;
+    return this.taskRepository.findByIdUser((Long) idUser);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
+  public ResponseEntity update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable Long id) {
 
     var task = this.taskRepository.findById(id).orElse(null);
 

@@ -29,11 +29,15 @@ public class FilterTaskAuth extends OncePerRequestFilter{
 
       var serletPath = request.getServletPath();
 
-      if(serletPath.startsWith("/tasks/")){
+      if (serletPath.startsWith("/tasks/")) {
 
-        var autorization = request.getHeader("Authorization");
-        
-        var authEncoded = autorization.substring("Basic".length()).trim();
+        var authorization = request.getHeader("Authorization");
+        if (authorization == null || !authorization.startsWith("Basic ")) {
+          response.sendError(401);
+          return;
+        }
+
+        var authEncoded = authorization.substring("Basic ".length()).trim();
   
         byte[] authDecoded = Base64.getDecoder().decode(authEncoded);
   
@@ -41,10 +45,10 @@ public class FilterTaskAuth extends OncePerRequestFilter{
   
         
         String[] credentials = atuthString.split(":");
-        String username = credentials[0];
+        String email = credentials[0];
         String password = credentials[1];
-        
-        var user = this.userRepository.findByUsername(username);
+
+        var user = this.userRepository.findByEmail(email);
         if(user == null){
           response.sendError(401);
         }else {

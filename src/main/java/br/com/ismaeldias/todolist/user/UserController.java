@@ -1,5 +1,7 @@
 package br.com.ismaeldias.todolist.user;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ public class UserController {
  
   @PostMapping("/")
   public ResponseEntity create(@RequestBody UserModel userModel) {
-    var user = this.userRepository.findByUsername(userModel.getUsername());
+    var user = this.userRepository.findByEmail(userModel.getEmail());
 
     if(user != null){
       System.out.println("Ususario já existe");
@@ -31,6 +33,7 @@ public class UserController {
       .hashToString(12, userModel.getPassword().toCharArray());
 
     userModel.setPassword(passwordHashred);
+    userModel.setDataCadastro(LocalDate.now());
 
     var userCreated = this.userRepository.save(userModel);
     return ResponseEntity.status(HttpStatus.OK).body(userCreated);
