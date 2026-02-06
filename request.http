@@ -1,0 +1,46 @@
+### Variáveis
+@baseUrl = http://localhost:8080
+# Basic Auth: use um usuário existente em financas.usuario (email + senha).
+# Gere em https://www.base64encode.org/ o texto: email:senha (ex: meu@email.com:minhasenha)
+# e cole abaixo (com "Basic " na frente).
+@basicAuth = Basic COLE_AQUI_BASE64_DE_EMAIL_SENHA
+
+### Health check
+GET {{baseUrl}}/actuator/health
+
+### Listar tarefas (exige Basic Auth: email + senha do usuário em financas.usuario)
+GET {{baseUrl}}/tasks/
+Authorization: {{basicAuth}}
+
+### Criar tarefa (Basic Auth obrigatório)
+POST {{baseUrl}}/tasks/
+Authorization: {{basicAuth}}
+Content-Type: application/json
+
+{
+  "title": "Teste local",
+  "description": "Tarefa criada antes de subir",
+  "startAt": "2026-02-10T09:00:00",
+  "endAt": "2026-02-10T18:00:00",
+  "priority": "MEDIA"
+}
+
+### Atualizar tarefa (substitua {id} pelo id da tarefa, ex: 1)
+PUT {{baseUrl}}/tasks/1
+Authorization: {{basicAuth}}
+Content-Type: application/json
+
+{
+  "title": "Título atualizado",
+  "description": "Descrição atualizada"
+}
+
+### Criar usuário (opcional; só se quiser testar cadastro em financas.usuario)
+POST {{baseUrl}}/users/
+Content-Type: application/json
+
+{
+  "name": "Nome Teste",
+  "email": "teste@exemplo.com",
+  "password": "senha123"
+}
