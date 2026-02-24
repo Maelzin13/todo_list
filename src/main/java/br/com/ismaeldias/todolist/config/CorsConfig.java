@@ -18,9 +18,11 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Permite o frontend na Vercel
-        config.setAllowedOrigins(Arrays.asList(
+        // Permite o frontend na Vercel (URL de produção e qualquer preview *.vercel.app)
+        config.setAllowedOriginPatterns(Arrays.asList(
             "https://ignite-todo-app-gold.vercel.app",
+            "https://ignite-todo-tbp793jw8-maelzins-projects.vercel.app",
+            "https://*.vercel.app",
             "http://localhost:3000",
             "http://localhost:5173",
             "http://localhost:8100",

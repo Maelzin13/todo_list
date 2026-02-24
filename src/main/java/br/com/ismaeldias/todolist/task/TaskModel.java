@@ -39,6 +39,9 @@ public class TaskModel {
   @Column(name = "id_usuario", nullable = false)
   private Long idUser;
 
+  @Column(name = "is_complete", nullable = false)
+  private Boolean isComplete = false;
+
   @CreationTimestamp
   @Column(name = "data_cadastro")
   private LocalDateTime createdAt;

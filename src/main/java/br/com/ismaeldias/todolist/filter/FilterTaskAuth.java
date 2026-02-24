@@ -24,6 +24,7 @@ public class FilterTaskAuth extends OncePerRequestFilter{
 
   private static final List<String> ALLOWED_ORIGINS = List.of(
       "https://ignite-todo-app-gold.vercel.app",
+      "https://ignite-todo-tbp793jw8-maelzins-projects.vercel.app",
       "http://localhost:3000",
       "http://localhost:5173",
       "http://localhost:8100",
@@ -36,7 +37,9 @@ public class FilterTaskAuth extends OncePerRequestFilter{
   /** Adiciona headers CORS na resposta para o browser não bloquear (mesmo em 401). */
   private void addCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
     String origin = request.getHeader("Origin");
-    if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
+    boolean allowed = origin != null
+        && (ALLOWED_ORIGINS.contains(origin) || origin.endsWith(".vercel.app"));
+    if (allowed) {
       response.setHeader("Access-Control-Allow-Origin", origin);
     } else {
       response.setHeader("Access-Control-Allow-Origin", "http://localhost:8100");
