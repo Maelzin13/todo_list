@@ -29,6 +29,8 @@ public class FilterTaskAuth extends OncePerRequestFilter{
       "http://localhost:5173",
       "http://localhost:8100",
       "http://127.0.0.1:8100",
+      "https://localhost",
+      "https://127.0.0.1",
       "capacitor://localhost",
       "ionic://localhost",
       "http://localhost"

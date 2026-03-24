@@ -19,6 +19,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         
         // Permite o frontend na Vercel (URL de produção e qualquer preview *.vercel.app)
+        // Capacitor / Ionic WebView usa https://localhost (Android/iOS); scheme custom antigo: capacitor:// / ionic://
         config.setAllowedOriginPatterns(Arrays.asList(
             "https://ignite-todo-app-gold.vercel.app",
             "https://ignite-todo-tbp793jw8-maelzins-projects.vercel.app",
@@ -26,7 +27,12 @@ public class CorsConfig {
             "http://localhost:3000",
             "http://localhost:5173",
             "http://localhost:8100",
-            "http://127.0.0.1:8100"
+            "http://127.0.0.1:8100",
+            "https://localhost",
+            "https://127.0.0.1",
+            "http://localhost",
+            "capacitor://localhost",
+            "ionic://localhost"
         ));
         
         // Métodos HTTP permitidos
